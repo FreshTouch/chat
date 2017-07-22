@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>IPTV_COMM</title>
+    <meta charset = "utf-8">
+    <link rel="stylesheet" type="text/css" href="../Css/RegisterLoginINDEX.css">
+    <script src="../JS/jquery.min.js"></script>
+    <script src="../JS/CallRegisterLoginAjax.js"></script>
+    <script src="../JS/RegisterLoginAjaxHandler.js"></script>
+</head>
+<body>
+	<div id="header">
+		<div id="sign_in_or_register_div">
+     		<button class="sign_in_or_register_buttons" id="sign_in_button" onclick = "main.regLogButton($('#sign_in')); return false;"><div>Sign In</div></button>
+     		<button class="sign_in_or_register_buttons" id="register_button" onclick = "main.regLogButton($('#register'));; return false;"><div>Register</div></button>
+     	</div>	
+		<div id="sign_in">
+			<p style="font-size:2em;">-------------------------&nbsp;Sign in&nbsp;-------------------------</p>
+	        <form class = "log" name="sign_in"> 
+				<div>
+					<input type="text" name="username" class="sign_in_input" placeholder='Login'>
+				</div>
+				<div>
+					<input type="password" name="password" class="sign_in_input" placeholder='Password'>
+				</div>
+				<div>
+	           		<button class="enter_buttons" type = "button" onclick = "main.login($('.log')); return false;">Enter</button>
+	        	</div>
+	        </form> 
+	        <div>
+	        	<form action="#" name="chackbox">
+	            	<label><input type="checkbox">Keep me logged in</label> 
+	        	</form>  
+	            <a href="#" id="question_for_password">Lost your password?</a>
+			</div>
+	    </div>
+	    <div class='opacity_bg' onclick = "main.opacity_bg($('.opacity_bg'), $('#sign_in'), $('#register')); return false;"></div>
+	    <div id="register">
+	       	<p style="font-size:2em;">-------------------------&nbsp;Register&nbsp;-------------------------</p>
+	        	<form class = "reg" name="register_form"> 
+	        		<div>
+		         		<input type="text" name="username" id = "name" class="register_input1" placeholder="Login">
+		         	</div>
+		         	<div>
+		         		<input type="text" name="firstName" class="register_input1" placeholder="First name" required autocomplete="on" maxlength="50">
+		         	</div>
+		         	<div>
+		         		<input type="text" name="lastName" class="register_input1" placeholder="Last Name" required autocomplete="on" maxlength="50">
+		         	</div>
+		            <div>
+		            	<input type="email" name="eMail" class="register_input1" placeholder='Email' required autocomplete="on" maxlength="50">
+		            </div>
+					<div>
+						<input type="password" name="password" id = "pass" class="register_input1" placeholder='Password' required autocomplete="on" maxlength="50">
+					</div>
+		            <div>
+	            		<button type = "button"  class="enter_buttons" onclick = "main.register($('.reg')); return false;">Enter</button>
+	            	</div>
+	           	</form> 
+	           	<div style = "width: 500px; height:500px; background-color: red; display: none" id = "loader"></div>
+		</div>
+	</div>
+</body>
+</html>

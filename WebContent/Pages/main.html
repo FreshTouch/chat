@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>IPTV_COMM</title>
+	<script>
+		if(sessionStorage.data == null){
+			window.location = "http://localhost:8080/IptvCommRest/Pages/index.html";
+		}
+	</script>
+	<meta charset = "utf-8">
+	<link rel="stylesheet" type="text/css" href="../Css/UserMain.css">
+	<script src="../JS/jquery.min.js"></script>
+	<script src="../JS/CallAjax.js"></script>
+    <script src="../JS/Main.js"></script>
+    <script src="../JS/UserAjaxHandler.js"></script>
+
+</head>
+<body>
+
+<div id="header">
+	    <div id="nav">
+			<ul id = "mainMenu">
+	        	<li>
+	        		<a class="icon_menu nav"><img src="../Images/navigation-menu.png" alt="Menu"></a>
+	        	</li>
+	          	<li>
+	          		<input value = "My Account" type = "submit"  class = "nav">
+	          	</li>
+	          	<li>
+	          		<input value = "Chat" type = "submit"  class = "nav">
+	          	</li>
+	          	<li>
+	          		<input value = "Settings" type = "submit"  class = "nav">
+	          	</li>
+	          	<li>
+	          		<input value = "Logout" type = "submit" title = "logout" name = "button1" class = "nav button" id = "logout" onclick = "user.buttonsShow(this); return false;">
+	          	</li>
+	      	</ul>
+		</div>
+	</div>
+   <div id="content">
+   		<div class = "top">
+   				<div class = "top-block">
+   					<h1># </h1>
+   				</div>
+   		</div>
+   		<div class = "center-block">
+   			<div class = "main">
+   				<div class = "page">
+   					<div class = "box-left">
+   						<div class = "info">
+   							<img class="right">
+   							<ul class = "left" id = "personal">
+   								<li class = "flname"># </li>
+   								<li class = "eMail"># </li>
+   							</ul>
+   						</div>
+   						<ul id = "menu">
+   							<li>
+   								<a title="account" class = "_1" id = "account_button">Account</a>
+   							</li>
+   							<li>
+   								<a title="friends" class = "button _2" id = "friends_button" onclick = "user.buttonsShow(this); return false;">Friends</a>
+   							</li>
+   							<li>
+   								<a title = "mail" class = "button _4" id = "mail_button">Mail</a>
+   							</li>
+   							<li>
+   								<a title="channels" class = "button _3" id = "channels_button" onclick = "user.buttonsShow(this); return false;">Channels</a>
+   							</li>
+   						</ul>
+   					</div>
+   					<div class = "box-right">
+   						<div id = "account" class = "active">
+   							<div>
+   								<div id = "account_information">Account Information</div>
+   							</div>
+   							<div>
+   								<a id = "update_my_account" class = "button_type">Update</a>
+   							</div>
+   							<div>
+	          					<input value = "Delete" type = "submit" name = "delete" class = "button_type button" title = "delete" id = "deletes" onclick = "user.buttonsShow(this); return false;">
+	          				</div>
+	   						<div id = "update">
+	   							<form class = "form upd" id="asd" name="update_form" title = "update">
+	   								<input name = "username" type="text" placeholder = "Login">
+	   								<input name = "firstName" type="text" placeholder = "First Name">
+	   								<input name = "lastName" type="text" placeholder = "Last Name">
+	   								<input name = "eMail" type="email" placeholder = "eMail">
+	   								<input name = "password" type="password" placeholder = "Password">
+	   								<input name = "avatar" type="text" placeholder = "Avatar URL">
+	   								<div id = "update_buttons">
+	   									<input  name = "submit" type="button" value ="update" class="button_type" onclick = "user.update($('.upd')); return false;">
+	   									<input  type="button" value ="Cancel" class="button_type cancel">	
+	   								</div>
+	   							</form>
+	   						</div>	
+	   						<div class='opacity_bg'></div>
+   						</div>
+   						<div id = "channels" class = "active" style = "display: none">
+   						</div>
+   						<div class = "active blocFriend" style = "display: none">
+   						</div>
+   						<div id = "mail">
+   							<div id="page-wrap">
+        						<p id="name-area"></p>
+        						<div id="chat-wrap">
+        							<div id="chat-area" class = "show">
+        								<div id = "div" class = "show">
+        								
+        								</div>
+        							</div>
+        						</div>
+        						<form id="send-message-area">
+            						<p class = "sendie" onclick = "user.buttonsShow(this); return false;" title = "sendMess_friend">Send</p>
+            						<p class = "clear_form" onclick = "user.buttonsShow(this); return false;" title = "clear_form">Clear form</p>
+            						<textarea id="sendie" maxlength = "100"></textarea>
+        						</form>
+        					</div>
+        					
+   						</div>
+   				</div>
+   			</div>
+			<div class = "page1">
+   				<div class = "fr">
+	   				<input type = "text"  class = "find_friends" placeholder = "Find friend">
+		   			<span class = "button_type  button" title = "find_friend" onclick = "user.buttonsShow(this); return false;">
+		   					Search
+		   			</span>
+	   			</div>
+	   			<div class="search_row fr row">
+	   				<div id = "search_result">
+	  					<div class="img">
+	    						<img class="search_img" src="">
+	  					</div>
+	  					<div class="controls">
+	    					<button class="button_type  button" title = "send_friend" onclick = "user.buttonsShow(this); return false;" style = "margin-top: 0">Add</button>
+	  					</div>
+	  					<div class="infos_1">
+	    					<div class="labeled name lk"></div>
+	    					<div class = "frfname lk"></div>
+	  					</div>
+	  				</div>
+				</div>
+				<div class="search_row acc fr">
+				</div>
+				<div id = "newMess">
+				</div>
+   			</div>
+   		</div>
+   		<div class = "bottom">
+   		</div>
+   </div>
+   </div>
+   <div id="footer"></div>
+</body>
+</html>
