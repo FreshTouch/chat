@@ -84,7 +84,9 @@ class Main{
 		}
 		
 		localStorage.setItem(id,tag_arr.outerHTML); 
-		
+		$(".blocFriend div").remove();
+		$("#friends_button").attr("onclick", "user.buttonsShow(this); return false;");
+	
 		setInterval(() => {	// STORACVAC KOD
 			CallAjax.newMessage();
 			$("#newMess div").remove();

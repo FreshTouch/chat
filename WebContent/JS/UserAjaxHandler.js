@@ -16,9 +16,9 @@ class UserAjaxHandler extends CallAjax{
 	};
 	
 	buttonsShow($this, fname){
-		const indexURL = "http://localhost:8080/IptvCommRest/Pages/index.html";	
-		const userURL = "http://localhost:8080/IptvCommRest/rest/UserService/";
-		const messURL = "http://localhost:8080/IptvCommRest/rest/MessageService/";
+		const indexURL = "http://iptv-comm.jelastic.regruhosting.ru";	
+		const userURL = "http://iptv-comm.jelastic.regruhosting.ru/rest/UserService/";
+		const messURL = "http://iptv-comm.jelastic.regruhosting.ru/rest/MessageService/";
 		switch($this.title){
 			case "logout":
 				this.action = userURL + "logout/" + sessionStorage.uname;
@@ -67,15 +67,17 @@ class UserAjaxHandler extends CallAjax{
 			case "decline_friend":
 				this.action = userURL + "declinefriend/" + sessionStorage.uId + "," + $this.id + "," + "false" + "," + sessionStorage.uToken;
 				this.method = "PUT";
-				this.success = (data)=>{
+				this.success = ()=>{
 					alert("GOOD");
+					$(".newFriend").hide();
 				};
 				break;
 			case "accept_friend":
 				this.action = userURL + "accfr/" + sessionStorage.uId + "," + $this.id + "," + sessionStorage.uToken;
 				this.method = "PUT";
-				this.success = (data)=>{
+				this.success = ()=>{
 					alert("GOOD");
+					$(".newFriend").hide();
 				}
 				break;
 			case "delete_friend":

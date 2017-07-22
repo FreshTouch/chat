@@ -3,7 +3,7 @@
 class CallRegisterLoginAjax{
 	
 	constructor() {
-	    this.rootURL = "http://localhost:8080/IptvCommRest/rest/UserService/";
+	    this.rootURL = "http://iptv-comm.jelastic.regruhosting.ru/rest/UserService/";
 	    this.method;
 	    this.action;
 	    this.formData;
@@ -34,7 +34,7 @@ class CallRegisterLoginAjax{
 				sessionStorage.uname = data.username;
 				sessionStorage.uId = data.userId;
 				sessionStorage.uToken = data.token;
-				window.location = "http://localhost:8080/IptvCommRest/Pages/main.html";
+				window.location = "http://iptv-comm.jelastic.regruhosting.ru/Pages/main.html";
 			}
 		});
 	};

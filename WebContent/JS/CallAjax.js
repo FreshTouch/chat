@@ -3,7 +3,7 @@
 class CallAjax{
 	
 	constructor() {
-	    this.rootURL = "http://localhost:8080/IptvCommRest/rest/UserService/";
+	    this.rootURL = "http://iptv-comm.jelastic.regruhosting.ru/rest/UserService/";
 	    this.method;
 	    this.action;
 	    this.formData;
@@ -37,7 +37,7 @@ class CallAjax{
 	static newMessage(){
 		$.ajax({
 			type: "GET",
-			url: "http://localhost:8080/IptvCommRest/rest/MessageService/messagelist/" + sessionStorage.uId + "," + sessionStorage.uToken,
+			url: "http://iptv-comm.jelastic.regruhosting.ru/rest/MessageService/messagelist/" + sessionStorage.uId + "," + sessionStorage.uToken,
 			dataType: "json",
 			contentType: "application/json",
 			success: (data)=>{
@@ -49,7 +49,7 @@ class CallAjax{
 	static newFriend(){
 		$.ajax({
 			type: "GET",
-			url: "http://localhost:8080/IptvCommRest/rest/UserService/frreqlist/"  + sessionStorage.uId,
+			url: "http://iptv-comm.jelastic.regruhosting.ru/rest/UserService/frreqlist/"  + sessionStorage.uId,
 			dataType: "json",
 			contentType: "application/json",
 			success: (data)=>{
