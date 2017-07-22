@@ -18,42 +18,42 @@ public class TvProgram {
 	public long getTvProgramId() {
 		return tvProgramId;
 	}
-	@XmlElement
+	
 	public void setTvProgramId(long tvProgramId) {
 		this.tvProgramId = tvProgramId;
 	}
 	public int getTvChannelId() {
 		return tvChannelId;
 	}
-	@XmlElement
+	
 	public void setTvChannelId(int tvChannelId) {
 		this.tvChannelId = tvChannelId;
 	}
 	public long getTvProgramName() {
 		return tvProgramName;
 	}
-	@XmlElement
+	
 	public void setTvProgramName(long tvProgramName) {
 		this.tvProgramName = tvProgramName;
 	}
 	public long getTvProgramDescr() {
 		return tvProgramDescr;
 	}
-	@XmlElement
+	
 	public void setTvProgramDescr(long tvProgramDescr) {
 		this.tvProgramDescr = tvProgramDescr;
 	}
 	public Date getStartDt() {
 		return startDt;
 	}
-	@XmlElement
+	
 	public void setStartDt(Date startDt) {
 		this.startDt = startDt;
 	}
 	public int getDurationInMinutes() {
 		return durationInMinutes;
 	}
-	@XmlElement
+	
 	public void setDurationInMinutes(int durationInMinutes) {
 		this.durationInMinutes = durationInMinutes;
 	}

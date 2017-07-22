@@ -20,7 +20,7 @@ public class Message {
 		return messageId;
 	}
 	
-	 @XmlElement
+	
 	public void setMessageId(long messageId) {
 		this.messageId = messageId;
 	}
@@ -28,7 +28,7 @@ public class Message {
 	public long getSender() {
 		return sender;
 	}
-	 @XmlElement
+
 	public void setSender(long sender) {
 		this.sender = sender;
 	}
@@ -36,7 +36,7 @@ public class Message {
 	public long getReceiver() {
 		return receiver;
 	}
-	 @XmlElement
+	 
 	public void setReceiver(long receiver) {
 		this.receiver = receiver;
 	}
@@ -44,7 +44,7 @@ public class Message {
 	public long getMessageContentId() {
 		return messageContentId;
 	}
-	 @XmlElement
+
 	public void setMessageContentId(long messageContentId) {
 		this.messageContentId = messageContentId;
 	}
@@ -52,7 +52,7 @@ public class Message {
 	public long getParentMessageId() {
 		return parentMessageId;
 	}
-	 @XmlElement
+
 	public void setParentMessageId(long parentMessageId) {
 		this.parentMessageId = parentMessageId;
 	}
@@ -60,7 +60,7 @@ public class Message {
 	public int getTvChannelId() {
 		return tvChannelId;
 	}
-	 @XmlElement
+	
 	public void setTvChannelId(int tvChannelId) {
 		this.tvChannelId = tvChannelId;
 	}
@@ -68,7 +68,7 @@ public class Message {
 	public long getTvProgramId() {
 		return tvProgramId;
 	}
-	 @XmlElement
+	
 	public void setTvProgramId(long tvProgramId) {
 		this.tvProgramId = tvProgramId;
 	}
@@ -76,7 +76,7 @@ public class Message {
 	public Date getSendDt() {
 		return sendDt;
 	}
-	 @XmlElement
+
 	public void setSendDt(Date sendDt) {
 		this.sendDt = sendDt;
 	}
@@ -84,7 +84,7 @@ public class Message {
 	public Date getReceiveDt() {
 		return receiveDt;
 	}
-	 @XmlElement
+	
 	public void setReceiveDt(Date receiveDt) {
 		this.receiveDt = receiveDt;
 	}

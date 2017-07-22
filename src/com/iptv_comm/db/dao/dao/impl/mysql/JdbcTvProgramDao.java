@@ -4,38 +4,15 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-
 import com.iptv_comm.db.dao.com.iptv_com.db.dao.dto.TvProgram;
 import com.iptv_comm.db.dao.com.iptv_com.db.exceptions.DBException;
 import com.iptv_comm.db.dao.dao.TvProgramDao;
-import com.iptv_comm.db.dao.dao.UserDao;
 import com.iptv_comm.db.dao.factory.DaoFactory;
 
 
 public class JdbcTvProgramDao extends JdbcDao implements TvProgramDao {
 
 	 public static final String tableName="tv_program";
-	    public static final String insertQuery="insert into "+tableName+" (tv_channel_id,tv_program_name, " +
-	    		"tv_program_descr,start_dt, duration_in_minutes) "+
-	            "values(?, ?, ?, ?, ?);";
-	    public static final String deleteQuery="delete from "+tableName+" where  "+
-	            " tv_program_id = ?";
-	    
-		public static final String updateQuery = "update  "+ tableName+"  set tv_channel_id=?, tv_program_name=?, " +
-				   " tv_program_descr=?, start_dt=?, duration_in_minutes=? where tv_program_id=?";
-		public static final String searchQuery = "select * from " + tableName + " where " +
-	    		" tv_program_id = ?";
-	
-		public static final String programdescrquery="select localized_description.description from tv_program, general_description, localized_description " +
-				" where tv_program.tv_program_descr= general_description.description_id and general_description.description_id= localized_description.description_id" +
-				" and tv_program.tv_program_id=?";
 		
 	
 	@Override	
@@ -44,6 +21,10 @@ public class JdbcTvProgramDao extends JdbcDao implements TvProgramDao {
 		if(program != null  ) {
 			Connection con = null;
 			PreparedStatement ps = null;
+			
+			String insertQuery="insert into "+tableName+" (tv_channel_id,tv_program_name, " +
+		    		"tv_program_descr,start_dt, duration_in_minutes) "+
+		            "values(?, ?, ?, ?, ?)";
 			try {
 				con = getConnection();
 				ps = con.prepareStatement(insertQuery,1);
@@ -77,6 +58,8 @@ public class JdbcTvProgramDao extends JdbcDao implements TvProgramDao {
 	public void removeTvProgram(long tvProgramId) throws DBException {
 		Connection con = null;
 		PreparedStatement ps = null;
+		String deleteQuery="delete from "+tableName+" where  "+
+	            " tv_program_id = ?";
 		try {
 			con = getConnection();
 			ps = con.prepareStatement(deleteQuery, 1);
@@ -98,6 +81,12 @@ public class JdbcTvProgramDao extends JdbcDao implements TvProgramDao {
 		Connection con=null; 
 		PreparedStatement pstmt = null;
 		ResultSet rset;
+		
+		String searchQuery = "select * from " + tableName + " where " +
+	    		" tv_program_id = ?";
+		
+		String updateQuery = "update  "+ tableName+"  set tv_channel_id=?, tv_program_name=?, " +
+				   " tv_program_descr=?, start_dt=?, duration_in_minutes=? where tv_program_id=?";
 		try {
 			con = getConnection();
 			pstmt = con.prepareStatement(searchQuery, 1);
@@ -151,8 +140,12 @@ public class JdbcTvProgramDao extends JdbcDao implements TvProgramDao {
 	public String getTvProgramDescription(long tvProgramId) throws DBException {
 		Connection con = null;
 		PreparedStatement pstmt = null;
-		ResultSet rset;
-		String descr;
+		ResultSet rset=null;
+		String descr="";
+		
+		String programdescrquery="select localized_description.description from tv_program, general_description, localized_description " +
+				" where tv_program.tv_program_descr= general_description.description_id and general_description.description_id= localized_description.description_id" +
+				" and tv_program.tv_program_id=?";
 		try {
 			con = getConnection();
 			pstmt = con.prepareStatement(programdescrquery, 1);
@@ -187,7 +180,6 @@ public class JdbcTvProgramDao extends JdbcDao implements TvProgramDao {
 	        try {
 				tvProgramDao.addTvProgram(program);
 			} catch (DBException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 	}

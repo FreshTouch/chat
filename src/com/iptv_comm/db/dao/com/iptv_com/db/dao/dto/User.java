@@ -6,12 +6,19 @@ import java.util.Date;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-/**
- * DTO class for user
- */
+
+
+
 @XmlRootElement(name="user")
 public class User {
-    private long userId;
+    @Override
+	public String toString() {
+		return "User [userId=" + userId + ", username=" + username + ", password=" + password + ", eMail=" + eMail
+				+ ", firstName=" + firstName + ", lastName=" + lastName + ", dob=" + dob + ", avatar=" + avatar
+				+ ", token=" + token + ", lastactive=" + lastactive + "]";
+	}
+
+	private long userId;
     private String username;
     private String password;
     private String eMail;
@@ -25,7 +32,7 @@ public class User {
     public long getUserId() {
         return userId;
     }
-    @XmlElement
+    
     public void setUserId(long userId) {
         this.userId = userId;
     }
@@ -48,7 +55,7 @@ public class User {
 	public String getUsername() {
         return username;
     }
-    @XmlElement
+   
     public void setUsername(String username) {
         this.username = username;
     }
@@ -56,7 +63,7 @@ public class User {
     public String getPassword() {
         return password;
     }
-    @XmlElement
+    
     public void setPassword(String password) {
         this.password = password;
     }
@@ -64,7 +71,7 @@ public class User {
     public String geteMail() {
         return eMail;
     }
-    @XmlElement
+    
     public void seteMail(String eMail) {
         this.eMail = eMail;
     }
@@ -72,7 +79,7 @@ public class User {
     public String getFirstName() {
         return firstName;
     }
-    @XmlElement
+    
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
@@ -80,7 +87,7 @@ public class User {
     public String getLastName() {
         return lastName;
     }
-    @XmlElement
+    
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
@@ -88,7 +95,7 @@ public class User {
     public Date getDob() {
         return dob;
     }
-    @XmlElement
+    
     public void setDob(Date dob) {
         this.dob = dob;
     }
@@ -96,7 +103,7 @@ public class User {
     public String getAvatar() {
         return avatar;
     }
-    @XmlElement
+   
     public void setAvatar(String avatar) {
         this.avatar = avatar;
     }
@@ -104,7 +111,7 @@ public class User {
 	public String getToken() {
 		return token;
 	}
-	@XmlElement
+	
 	public void setToken(String token) {
 		this.token = token;
 	}
@@ -112,7 +119,7 @@ public class User {
 	public Date getLastactive() {
 		return lastactive;
 	}
-	@XmlElement
+	
 	public void setLastactive(Date lastactive) {
 		this.lastactive = lastactive;
 	}

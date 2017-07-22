@@ -25,71 +25,86 @@ public class MessageServiceImpl implements MessageService {
 	}
 	
 	@PUT
-	@Path("/message/{senderid},{receiverid},{subject},{body}")
-	@Consumes(MediaType.APPLICATION_XML)
+	@Path("/message/{senderid},{receiverid},{subject},{body},{token}")
+	@Consumes({MediaType.APPLICATION_JSON})
 	@Override
 	public void sendMessage(@PathParam("senderid") long senderId, @PathParam("receiverid")  long receiverId, 
-			                          @PathParam("subject") String subject, @PathParam("body") String body) throws DBException {
-		 messagedao.sendMessage(senderId, receiverId, subject, body);
+			                          @PathParam("subject") String subject, @PathParam("body") String body, @PathParam("token") String token) throws DBException {
+		 messagedao.sendMessage(senderId, receiverId, subject, body,token);
+		 
 		
 	}
+	
 	@GET
-	@Path("/message/{reciverId}")
-	@Produces({ MediaType.APPLICATION_XML })
+	@Path("/messagelist/{reciverId},{token}")
+	@Produces({MediaType.APPLICATION_JSON})
 	@Override
-	public ArrayList<Message> getReceivedMessages( @PathParam("receiverid")long reciverId)
+	public ArrayList<Message> getReceivedMessages(@PathParam("reciverId") long reciverId, @PathParam("token") String token)
 			throws DBException {
-		return messagedao.getReceivedMessages(reciverId);
+		
+		return messagedao.getReceivedMessages(reciverId,token);
 	}
+	
 	@PUT
-	@Path("/showmessage/{messageId}")
-	@Produces({ MediaType.APPLICATION_XML })
+	@Path("/showmessage/{messageId},{token}")
+	//@Produces({MediaType.APPLICATION_JSON})
+	@Consumes({MediaType.APPLICATION_JSON})
 	@Override
-	public String showMessageContent(@PathParam("messageId") long messageId) throws DBException {
-		return messagedao.showMessageContent(messageId);
+	public String showMessageContent(@PathParam("messageId") long messageId,@PathParam("token") String token) throws DBException {
+		return messagedao.showMessageContent(messageId,token);
 		
 	}
+	
 	@PUT
-	@Path("/replymessage/{messageId},{body}")
-	@Consumes(MediaType.APPLICATION_XML)
+	@Path("/replymessage/{messageId},{body},{token}")
+	@Produces({MediaType.APPLICATION_JSON})
+	@Consumes({MediaType.APPLICATION_JSON})
 	@Override
-	public void replyToMessage(@PathParam("messageId") long messageId, @PathParam("body") String body) throws DBException {
-		messagedao.replyToMessage(messageId, body);
+	public void replyToMessage(@PathParam("messageId") long messageId, @PathParam("body") String body,@PathParam("token") String token) throws DBException {
+		messagedao.replyToMessage(messageId, body,token);
 		
 	}
+	
+
 	@PUT
-	@Path("/forwardmessage/{messageId},{newreceiverid}")
-	@Consumes(MediaType.APPLICATION_XML)
+	@Path("/forwardmessage/{messageId},{newreceiverid},{token}")
+	@Produces({MediaType.APPLICATION_JSON})
+	@Consumes({MediaType.APPLICATION_JSON})
 	@Override
-	public void forwardMessage(@PathParam("messageId")long messageId,  @PathParam("newreceiverid")long newreciverId)
+	public void forwardMessage(@PathParam("messageId") long messageId,  @PathParam("newreceiverid") long newreciverId,@PathParam("token") String token)
 			throws DBException {
-		messagedao.forwardMessage(messageId, newreciverId); 
+		messagedao.forwardMessage(messageId, newreciverId,token); 
+		
+	}
+	
+
+	@POST
+	@Path("/suggestprogram/{body},{token}")
+	@Produces({MediaType.APPLICATION_JSON})
+	@Consumes({MediaType.APPLICATION_JSON})
+	@Override
+	public void suggestLiveProgram(Message message, @PathParam("body") String body,@PathParam("token") String token) throws DBException {
+		messagedao.suggestLiveProgram(message, body,token);
+		
+	}
+	
+	
+	@POST
+	@Path("/commentprogram/{body},{token}")
+	@Consumes({MediaType.APPLICATION_JSON})
+	@Override
+	public void commentProgram(Message message, @PathParam("body") String body, @PathParam("token") String token) throws DBException {
+		messagedao.commentProgram(message, body,token);
 		
 	}
 	
 	@POST
-	@Path("/suggestprogram/{body}")
-	@Consumes({ MediaType.APPLICATION_XML })
+	@Path("/commentTocomment/{senderid},{parentid},{body},{token}")
+	@Consumes({MediaType.APPLICATION_JSON})
 	@Override
-	public void suggestLiveProgram(Message message, @PathParam("body") String body) throws DBException {
-		messagedao.suggestLiveProgram(message, body);
-		
-	}
-	@POST
-	@Path("/commentprogram/{body}")
-	@Consumes({ MediaType.APPLICATION_XML })
-	@Override
-	public void commentProgram(Message message, @PathParam("body") String body) throws DBException {
-		messagedao.commentProgram(message, body);
-		
-	}
-	@PUT
-	@Path("/commentTocomment/{senderid},{parentid},{body}")
-	@Consumes(MediaType.APPLICATION_XML)
-	@Override
-	public void commentToComment(@PathParam("senderid")long senderId,@PathParam("parentid") long parentId, @PathParam("body")String body)
+	public void commentToComment(@PathParam("senderid")long senderId,@PathParam("parentid") long parentId, @PathParam("body")String body,@PathParam("token") String token)
 			throws DBException {
-		messagedao.commentToComment(senderId, parentId, body);
+		messagedao.commentToComment(senderId, parentId, body,token);
 	}
 
 }

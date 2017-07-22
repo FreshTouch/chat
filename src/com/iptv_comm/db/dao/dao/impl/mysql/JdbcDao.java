@@ -23,7 +23,7 @@ public class JdbcDao {
             FileInputStream fis = null;
             Connection con=null;
             try {
-                fis = new FileInputStream("//home/misha/db.properties");
+                fis = new FileInputStream("C://Users//User//Desktop//db.properties");
                 props.load(fis);
 
                 // load the Driver Class

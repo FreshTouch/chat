@@ -13,22 +13,17 @@ import java.sql.ResultSet;
  * Created by user on 7/5/16.
  */
 public class JdbcTvProviderDao extends JdbcDao implements TvProviderDao {
-    public static final String tableName="tv_provider";
-    public static final String insertQuery="insert into "+tableName+" (company_name) "+
-            "values(?);";
-    public static final String deleteQuery="delete from "+tableName+" where  "+
-            "tv_provider_id=?";
-    public static final String searchQuery = "select * from " + tableName + " where " +
-    		"company_name = ?";
-
-
-
+    
+	public static final String tableName="tv_provider";
+ 
     @Override
     public int addTvProvider(TvProvider tvProvider) throws DBException {
         int tvProviderId=0;
         if(tvProvider!=null && tvProvider.getCompanyName()!=null){
             Connection con = null;
             PreparedStatement pstmt = null;
+            String insertQuery="insert into "+tableName+" (company_name) "+
+                    "values(?)";
             try {
                 con=getConnection();
                 pstmt=con.prepareStatement(insertQuery,1);
@@ -56,7 +51,9 @@ public class JdbcTvProviderDao extends JdbcDao implements TvProviderDao {
     	long tvProviderId=0;
     	Connection con = null;
     	PreparedStatement ps = null;
-    	ResultSet rs;
+    	ResultSet rs=null;
+    	String searchQuery = "select * from " + tableName + " where " +
+        		"company_name = ?";
     	try {
     		con = getConnection();
     		ps = con.prepareStatement(searchQuery, 1);
@@ -80,6 +77,8 @@ public class JdbcTvProviderDao extends JdbcDao implements TvProviderDao {
     public void deleteTvProvider(long tvProviderId) throws DBException {
     	Connection con = null;
     	PreparedStatement ps = null;
+    	String deleteQuery="delete from "+tableName+" where  "+
+                "tv_provider_id=?";
     	try {
     		con = getConnection();
     		ps = con.prepareStatement(deleteQuery, 1);

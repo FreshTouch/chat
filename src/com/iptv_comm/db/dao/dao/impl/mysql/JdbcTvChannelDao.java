@@ -14,27 +14,7 @@ import com.iptv_comm.db.dao.factory.DaoFactory;
 public class JdbcTvChannelDao extends JdbcDao implements TvChannelDao{
 
 	public static final String tableName="tv_channel";
-	public static final String insertQuery="insert into "+tableName+" (provider_id, channel_number, channel_name, channel_descr,channel_url, channel_logo) "+
-            "values(?, ?, ?, ?, ?, ?);";
-	public static final String deleteQuery="delete from "+tableName+" where  "+
-            "tv_channel_id = ?";
-	
-	public static final String updateQuery = "update  "+ tableName+"  set provider_id =?,channel_number=?,channel_name=?,channel_descr=? , channel_url=?," +
-			   "channel_logo=? where tv_channel_id=?";
-	public static final String searchQuery = "select * from " + tableName + " where " +
-    		"tv_channel_id = ?";
-	
-	public static final String tvprogramsearchquery="select * from tv_program,tv_channel,general_name  " +
-			"where tv_channel.channel_name= general_name.name_id and " +
-			"general_name.name_id=tv_program.tv_program_name and tv_channel.tv_channel_id=?";
-	
-	public static final String descriptionQuery="select localized_description.description from localized_description,general_description,tv_channel" +
-			" where localized_description.description_id= general_description.description_id and " +
-			"general_description.description_id= tv_channel.channel_descr and tv_channel.tv_channel_id=?";
-	
-	public static final String languageQuery="select language.language_name from language, localized_name , general_name , tv_channel " +
-			"where language.language_id= localized_name.language_id and localized_name.name_id= general_name.name_id " +
-			"and general_name.name_id= tv_channel.channel_name and tv_channel.tv_channel_id=?";
+		
 	
 	@Override	
 	public int addTvChannel(TvChannel channel) throws DBException {
@@ -42,6 +22,8 @@ public class JdbcTvChannelDao extends JdbcDao implements TvChannelDao{
 		 if(channel!=null && channel.getChannelUrl()!=null && channel.getChannelLogo()!=null){
 	            Connection con = null;
 	            PreparedStatement pstmt = null;
+	            String insertQuery="insert into "+tableName+" (provider_id, channel_number, channel_name, channel_descr,channel_url, channel_logo) "+
+	                    "values(?, ?, ?, ?, ?, ?)";
 	            try {
 	                con=getConnection();
 	                pstmt=con.prepareStatement(insertQuery,1);
@@ -76,6 +58,8 @@ public class JdbcTvChannelDao extends JdbcDao implements TvChannelDao{
 	public void removeTvChannel(int tvChannelId) throws DBException {
 		Connection con = null;
 		PreparedStatement pstmt = null;
+		String deleteQuery="delete from "+tableName+" where  "+
+	            "tv_channel_id = ?";
 		try {
 			con = getConnection();
 			pstmt = con.prepareStatement(deleteQuery, 1);
@@ -99,6 +83,11 @@ public class JdbcTvChannelDao extends JdbcDao implements TvChannelDao{
 		Connection con=null; 
 		PreparedStatement pstmt = null;
 		ResultSet rset;
+		String searchQuery = "select * from " + tableName + " where " +
+	    		"tv_channel_id = ?";
+		
+		String updateQuery = "update  "+ tableName+"  set provider_id =?,channel_number=?,channel_name=?,channel_descr=? , channel_url=?," +
+				   "channel_logo=? where tv_channel_id=?";
 		try {
 			con = getConnection();
 			pstmt = con.prepareStatement(searchQuery, 1);
@@ -159,8 +148,11 @@ public class JdbcTvChannelDao extends JdbcDao implements TvChannelDao{
 	public String getLanguage(int tvchannelid) throws DBException {
 		Connection con = null;
 		PreparedStatement pstmt = null;
-		ResultSet rset;
-		String lang;
+		ResultSet rset=null;
+		String lang="";
+		String languageQuery="select language.language_name from language, localized_name , general_name , tv_channel " +
+				"where language.language_id= localized_name.language_id and localized_name.name_id= general_name.name_id " +
+				"and general_name.name_id= tv_channel.channel_name and tv_channel.tv_channel_id=?";
 		try {
 			con = getConnection();
 			pstmt = con.prepareStatement(languageQuery, 1);
@@ -184,8 +176,11 @@ public class JdbcTvChannelDao extends JdbcDao implements TvChannelDao{
 	public String getDescription(int tvchannelid) throws DBException {
 		Connection con = null;
 		PreparedStatement pstmt = null;
-		ResultSet rset;
-		String descr;
+		ResultSet rset=null;
+		String descr="";
+		String descriptionQuery="select localized_description.description from localized_description,general_description,tv_channel" +
+				" where localized_description.description_id= general_description.description_id and " +
+				"general_description.description_id= tv_channel.channel_descr and tv_channel.tv_channel_id=?";
 		try {
 			con = getConnection();
 			pstmt = con.prepareStatement(descriptionQuery, 1);
@@ -212,7 +207,10 @@ public class JdbcTvChannelDao extends JdbcDao implements TvChannelDao{
 		TvProgram program;
 		Connection con = null;
 		PreparedStatement pstmt = null;
-		ResultSet rset;
+		ResultSet rset=null;
+		String tvprogramsearchquery="select * from tv_program,tv_channel,general_name  " +
+				"where tv_channel.channel_name= general_name.name_id and " +
+				"general_name.name_id=tv_program.tv_program_name and tv_channel.tv_channel_id=?";
 		try {
 			con = getConnection();
 			pstmt = con.prepareStatement(tvprogramsearchquery, 1);

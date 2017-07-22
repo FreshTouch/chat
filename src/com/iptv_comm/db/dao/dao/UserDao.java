@@ -1,5 +1,6 @@
 package com.iptv_comm.db.dao.dao;
 
+import java.sql.ResultSet;
 import java.util.ArrayList;
 
 import com.iptv_comm.db.dao.com.iptv_com.db.dao.dto.TvChannel;
@@ -29,7 +30,7 @@ public interface UserDao {
     
     long getUserId (String username) throws DBException;
     
-    String login(String userName,String password) throws DBException;
+    User login(String userName,String password) throws DBException;
     
      String getTokenById(long userId) throws DBException;
     
@@ -39,7 +40,13 @@ public interface UserDao {
     
     ArrayList <TvChannel> getTvChannelList(String userName,String token) throws DBException;
     
+    ResultSet getTvLogoAndName(String userName,String token) throws Exception;
     
+    ArrayList <String> getTvLogo(String userName,String token) throws Exception;
+    
+    ArrayList <String> getTvChanelName(String userName,String token) throws Exception;
+    
+    //User getInfo(String token) throws DBException;
     
     void sendFriendRequest(long thisId,long receiverId,String token) throws DBException; 
     
@@ -47,6 +54,12 @@ public interface UserDao {
     
     void declineFriendRequest(long accId,long senderId, boolean isAnnoying,String token) throws DBException;
     
+    void deletFriendById(long userId,long friendId, String token )throws DBException;
+    
     ArrayList <User> getfriendList(long userId,String token) throws DBException;
+    
+    User searchUsers(String username) throws DBException;
+    
+    ArrayList <User> getfriendRecuestList(long userId) throws DBException;
 
 }

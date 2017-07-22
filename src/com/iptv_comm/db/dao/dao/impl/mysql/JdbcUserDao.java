@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -18,35 +19,6 @@ import com.iptv_comm.db.dao.factory.DaoFactory;
  */
 public class JdbcUserDao extends JdbcDao implements UserDao{
     public static final String tableName="user";
-    public static final String insertQuery="insert into "+tableName+" (username, password, email, first_name, last_name, dob, avatar) "+
-            "values(?, ?, ?, ?, ?, ?, ?);";
-    public static final String deleteQuery="delete from "+tableName+" where  "+
-            "user_id = ?";
-    public static final String searchQuery = "select * from " + tableName + " where " +
-    		"username= ?";
-    
-    public static final String updateQuery = "update  "+ tableName+"  set username =? , password=? , email=? , first_name=? , last_name=?," +
-			   "dob=?, avatar=? where user_id=?";
-    
-    public static final String search="select * from "+ tableName+" where username=? and password=?";
-    public static final String updateToken = "update  "+ tableName+"  set token =? where username=?";
-    public static final String selectToken = "select token from "+ tableName+"  where username=?";
-    public static final String  updateTokenToNull="update  "+ tableName+"  set token = null where username=?";
-    public static final String updatelastactive = "update  "+ tableName+"  set last_active =? where username=?";
-
-	public static final String tvchannelsearchquery="select * from tv_channel,tv_provider,user_tv_provider,user where user.user_id=user_tv_provider.user_id " +
-			"and user_tv_provider.tv_provider_id = tv_provider.tv_provider_id and " +
-			"tv_provider.tv_provider_id = tv_channel.provider_id and user.username=?";
-	
-	public static final String friendRequestQuery="insert into user_assoc value(null,?,?,1)";
-	public static final String requestResponseQuery="update user_assoc set assoc_type_id=? where object_user_id=? and subject_user_id=?";
-	public static final String  deleteAssocQuery="delete from user_assoc where object_user_id=? and subject_user_id=?";
-	public static final String isExistQuery="select * from user_assoc where object_user_id=? and subject_user_id=?";
-	public static final String isDublicateQuery="select * from user_assoc where object_user_id=? and subject_user_id=? and (assoc_type_id=1 or assoc_type_id=2)";
-    public static final String getFriend1="select object_user_id from user_assoc where subject_user_id=? and assoc_type_id=2";
-    public static final String getFriend2="select subject_user_id from user_assoc where object_user_id=? and assoc_type_id=2";
-    public static final String searchfriendQuery = "select * from " + tableName + " where " +
-    		"user_id = ?";
     
     @Override
 	public long addUser(User user) throws DBException {
@@ -54,6 +26,8 @@ public class JdbcUserDao extends JdbcDao implements UserDao{
 		if(user != null && user.getUsername() != null && user.getPassword()!=null) {
 			Connection con = null;
 			PreparedStatement ps = null;
+			String insertQuery="insert into "+tableName+" (username, password, email, first_name, last_name, dob, avatar) "+
+		            "values(?, ?, ?, ?, ?, ?, ?);";
 			try {
 				con = getConnection();
 				ps = con.prepareStatement(insertQuery,1);
@@ -125,6 +99,8 @@ public class JdbcUserDao extends JdbcDao implements UserDao{
 		Connection con = null;
 		PreparedStatement ps = null;
 		ResultSet rs=null;
+		String searchQuery = "select * from " + tableName + " where " +
+	    		"username= ?";
 		try {
 			con = getConnection();
 			ps = con.prepareStatement(searchQuery, 1);
@@ -149,15 +125,18 @@ public class JdbcUserDao extends JdbcDao implements UserDao{
 	
 	
 	@Override
-	public String login(String userName,String password) throws DBException {
+	public User login(String userName,String password) throws DBException {
 		Connection con = null;
 		PreparedStatement ps = null;
-		ResultSet rs;
+		ResultSet rs=null;
+		User user = null;
 		String usname="";
-		
+		String search="select * from "+ tableName+" where username=? and password=?";
+		String updateToken = "update  "+ tableName+"  set token =? where username=?";
 		char  xar []={'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z',
-				'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z',
-				'!','@','#','$','%','^','&','*','(',')','{','}','[',']','.','>','<','/','?'};
+				'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'};
+			
+				
 		String token=userName;
 		while(token.length()<50){
 			int r=(int)(Math.random()*xar.length);
@@ -195,6 +174,7 @@ public class JdbcUserDao extends JdbcDao implements UserDao{
 				ps.setString(1, token);
 				ps.setString(2, userName);
 				ps.executeUpdate();
+				user = getInfo(token);
 					
 			}
 		}
@@ -205,8 +185,8 @@ public class JdbcUserDao extends JdbcDao implements UserDao{
 			closeStatement(ps);
 			closeConnection(con);
 		}
-		return token;
-	}
+		return user;
+	} 
 	
 	public String getTokenById(long userId) throws DBException{
 		String token="";
@@ -238,6 +218,8 @@ public class JdbcUserDao extends JdbcDao implements UserDao{
 	public void logout(String userName) throws DBException {
 		Connection con = null;
 		PreparedStatement ps = null;
+		String  updateTokenToNull="update  "+ tableName+"  set token = null where username=?";
+		String updatelastactive = "update  "+ tableName+"  set last_active =? where username=?";
 		try{
 			con=getConnection();
 	
@@ -272,7 +254,8 @@ public class JdbcUserDao extends JdbcDao implements UserDao{
 		String usertvproviderdel="delete from user_tv_provider where user_id=?";
 		String usermessagedel="delete from message where sender=?";
 		String usermessagedel2="delete from message where receiver=?";
-		
+		String deleteQuery="delete from "+tableName+" where  "+
+	            "user_id = ?";
 		try {
 			con = getConnection();
 			ps=con.prepareStatement(userassocdel,1);
@@ -321,6 +304,8 @@ public class JdbcUserDao extends JdbcDao implements UserDao{
 		Connection con=null; 
 		PreparedStatement pstmt = null;
 		ResultSet rset;
+		String updateQuery = "update  "+ tableName+"  set username =? , password=? , email=? , first_name=? , last_name=?," +
+				   "dob=?, avatar=? where user_id=?";
 		String searchQuery1 = "select * from user where " +
 		    		"user_id= ?";
 	if(token.equals(getTokenById(user.getUserId()))){
@@ -332,36 +317,34 @@ public class JdbcUserDao extends JdbcDao implements UserDao{
 			//pstmt.close();
 			rset.next();
 			pstmt=con.prepareStatement(updateQuery,1);	
-			if(user.getUsername()!=null){
+			if(user.getUsername().length()>4){
 				pstmt.setString(1,user.getUsername());
 				
 			}
 			else{
 				pstmt.setString(1,rset.getString(2));
 			}
-		
+
 			
-			
-			
-			if(user.getPassword()!=null){
+			if(user.getPassword().length()>4){
 				pstmt.setString(2,user.getPassword());
 			}
 			else{
 				pstmt.setString(2,rset.getString(3));
 			}
-			if(user.geteMail()!=null){
+			if(user.geteMail().length()>6){
 				pstmt.setString(3,user.geteMail());
 			}
 			else{
 				pstmt.setString(3,rset.getString(4));
 			}
-			if(user.getFirstName()!=null){
+			if(user.getFirstName().length()>2){
 				pstmt.setString(4,user.getFirstName());
 			}
 			else{
 				pstmt.setString(4,rset.getString(5));
 			}
-			if(user.getLastName()!=null){
+			if(user.getLastName().length()>4){
 				pstmt.setString(5,user.getLastName());
 			}
 			else{
@@ -376,7 +359,7 @@ public class JdbcUserDao extends JdbcDao implements UserDao{
 			
 			
 			
-			if(user.getAvatar()!=null){
+			if(user.getAvatar().length()>9){
 				pstmt.setString(7,user.getAvatar());
 			}
 			else{
@@ -408,8 +391,11 @@ public class JdbcUserDao extends JdbcDao implements UserDao{
 		ArrayList<TvChannel> channellist=new ArrayList<TvChannel>();
 		Connection con=null; 
 		PreparedStatement pstmt = null;
-		ResultSet rset;
-		TvChannel channel;
+		ResultSet rset = null;
+		TvChannel channel = null;
+		 String tvchannelsearchquery="select * from tv_channel,tv_provider,user_tv_provider,user where user.user_id=user_tv_provider.user_id " +
+					"and user_tv_provider.tv_provider_id = tv_provider.tv_provider_id and " +
+					"tv_provider.tv_provider_id = tv_channel.provider_id and user.username=?";
 		if(token.equals(getTokenById(getUserId(userName)))){
 		try {
 			con = getConnection();
@@ -447,13 +433,15 @@ public class JdbcUserDao extends JdbcDao implements UserDao{
 	}
 	
 	
-	
 	@Override
 	public void sendFriendRequest(long thisId,long receiverId,String token) throws DBException {
 		
 		Connection con=null;
 		PreparedStatement pstmt=null;
-		ResultSet rset;
+		ResultSet rset = null;
+		String friendRequestQuery="insert into user_assoc value(null,?,?,1)";
+		String isExistQuery="select * from user_assoc where object_user_id=? and subject_user_id=?";
+		String isDublicateQuery="select * from user_assoc where object_user_id=? and subject_user_id=? and (assoc_type_id=1 or assoc_type_id=2)";
 		if(token.equals(getTokenById(thisId))){
 		try {
 			con=getConnection();
@@ -509,6 +497,7 @@ public class JdbcUserDao extends JdbcDao implements UserDao{
 			throws DBException {
 			Connection con=null;
 			PreparedStatement pstmt=null;
+			String requestResponseQuery="update user_assoc set assoc_type_id=? where object_user_id=? and subject_user_id=?";
 			
 			if(token.equals(getTokenById(accId))){
 			try{
@@ -536,6 +525,8 @@ public class JdbcUserDao extends JdbcDao implements UserDao{
 			throws DBException {
 		Connection con=null;
 		PreparedStatement pstmt=null;
+		String requestResponseQuery="update user_assoc set assoc_type_id=? where object_user_id=? and subject_user_id=?";
+		String  deleteAssocQuery="delete from user_assoc where object_user_id=? and subject_user_id=?";
 		if(token.equals(getTokenById(accId))){
 		try{
 			con=getConnection();
@@ -574,9 +565,13 @@ public class JdbcUserDao extends JdbcDao implements UserDao{
 		Connection con=null; 
 		PreparedStatement pstmt = null;
 		PreparedStatement pstmt2 = null;
-		ResultSet rset;
-		ResultSet rset2;
-		User user;
+		ResultSet rset = null;
+		ResultSet rset2 = null;
+		User user = null;
+		String getFriend1="select object_user_id from user_assoc where subject_user_id=? and assoc_type_id=2";
+		String getFriend2="select subject_user_id from user_assoc where object_user_id=? and assoc_type_id=2";
+		String searchfriendQuery = "select * from " + tableName + " where " +
+	    		"user_id = ?";
 		if(token.equals(getTokenById(userId))){
 		try {
 			con = getConnection();
@@ -590,8 +585,10 @@ public class JdbcUserDao extends JdbcDao implements UserDao{
 				rset2=pstmt2.executeQuery();
 				rset2.next();
 				user.setUserId(rset2.getLong(1));
+				user.setUsername(rset2.getString(2));
 				user.setFirstName(rset2.getString(5));
 				user.setLastName(rset2.getString(6));
+				user.setDob(rset2.getDate(7));
 				user.setAvatar(rset2.getString(8));
 				friendlist.add(user);
 			}
@@ -628,35 +625,236 @@ public class JdbcUserDao extends JdbcDao implements UserDao{
 		
 		return friendlist;
 	}
+	
+	
+	
+	
+	public User getInfo(String token) throws DBException {
+		String sql="Select * from user where token = ? ";
+	    Connection con=null;
+	    PreparedStatement prst=null;
+	    ResultSet rset=null;
+	    User user=null;
+	    try {
+			con = getConnection();
+			prst = con.prepareStatement(sql, 1);
+			prst.setString(1,token);
+				rset =prst.executeQuery();
+				if(rset.next()){
+				user=new User();
+				user.setUserId(rset.getLong(1));
+				user.setUsername(rset.getString(2));
+				user.seteMail(rset.getString(4));
+				user.setFirstName(rset.getString(5));
+				user.setLastName(rset.getString(6));
+				user.setDob(rset.getDate(7));
+				user.setAvatar(rset.getString(8));
+				user.setToken(rset.getString(9));
+			}
+		}
+		catch (Exception e){
+			throw new DBException (e);
+		}
+		finally {
+			closeStatement(prst);
+			closeConnection(con);
+		}
+	    
+	    
+		return user;
+	}
+	
+	
+	@Override
+	public ResultSet getTvLogoAndName(String userName, String token) throws Exception {
+		Connection con=null;
+		PreparedStatement pstmt=null;
+		ResultSet rset=null; 
+		String channellogoname="select tv_channel.channel_logo,general_name.internal_name from general_name,tv_channel,tv_provider,user_tv_provider,user"
+				+ " where user.user_id=user_tv_provider.user_id and user_tv_provider.tv_provider_id = tv_provider.tv_provider_id"
+				+ " and general_name.name_id = tv_channel.channel_name and tv_provider.tv_provider_id = tv_channel.provider_id and user.username=?";
+		if(token.equals(getTokenById(getUserId(userName)))){
+			
+				con = getConnection();
+				pstmt=con.prepareStatement(channellogoname,1);
+				pstmt.setString(1,userName);
+				rset=pstmt.executeQuery();
+			
+			
+			}
+			else{
+				throw new DBException ("token is not valid");
+			}
+		return rset;
+	}
+	
+	
+	@Override
+	public ArrayList <String> getTvLogo(String userName, String token) throws Exception {
+		ResultSet rset=null; 
+		ArrayList <String> list = new ArrayList<>();
+		rset = getTvLogoAndName(userName, token);
+		while(rset.next()){
+			list.add(rset.getString(1));
+		}
+		
+		return list;
+	}
+
+	
+	@Override
+	public ArrayList <String> getTvChanelName(String userName, String token) throws Exception {
+		ResultSet rset=null; 
+		ArrayList <String> list = new ArrayList<>();
+		rset = getTvLogoAndName(userName, token);
+		while(rset.next()){
+			list.add(rset.getString(2));
+		}
+		
+		return list;
+	}
+	
+	
+	
+	@Override
+	public void deletFriendById(long userId, long friendId, String token) throws DBException {
+		Connection con=null;
+		PreparedStatement pstmt=null;
+		String deleteQuery = " delete  from user_assoc where assoc_type_id = 2 and object_user_id =? and subject_user_id =? ";
+		if(token.equals(getTokenById(userId))){
+		try {
+			 con = getConnection();
+				pstmt = con.prepareStatement(deleteQuery, 2);
+				pstmt.setLong(1, friendId);
+				pstmt.setLong(2, userId);
+				pstmt.executeUpdate();
+				
+				pstmt = con.prepareStatement(deleteQuery, 2);
+				pstmt.setLong(1, userId);
+				pstmt.setLong(2, friendId);
+				pstmt.executeUpdate();
+						
+			}
+			catch (Exception e){
+				throw new DBException (e);
+			}
+			finally {
+				closeStatement(pstmt);
+				closeConnection(con);
+			}
+		} else{
+			throw new DBException("Token is not valid");
+		}
+		    
+		
+		
+	}
+
+	
+	@Override
+	public User searchUsers(String username) throws DBException {
+		Connection con = null;
+		PreparedStatement ps = null;
+		ResultSet rset;
+		User user;
+		try {
+			con=getConnection();
+			ps=con.prepareStatement("Select * from user where username like ?");
+			ps.setString(1,username);
+			rset=ps.executeQuery();
+			rset.next();
+				user=new User();
+				user.setUserId(rset.getLong(1));
+				user.setUsername(rset.getString(2));
+				user.seteMail(rset.getString(4));
+				user.setFirstName(rset.getString(5));
+				user.setLastName(rset.getString(6));
+				user.setDob(rset.getDate(7));
+				user.setAvatar(rset.getString(8));
+				
+		}
+			catch (Exception e){
+				throw new DBException (e);
+			}
+			finally {
+				closeStatement(ps);
+				closeConnection(con);
+			}
+		return user;
+	}
+	
+	@Override
+	public ArrayList<User> getfriendRecuestList(long userId) throws DBException {
+		ArrayList<User> friendlist=new ArrayList<User>();
+		Connection con=null; 
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		User user = null;
+		String getFriend="select * from user, user_assoc  where user_assoc.assoc_type_id  = 1 and "
+				+ "user_assoc.subject_user_id = ? and user.user_id = user_assoc.object_user_id";
+		
+		
+		try {
+			con = getConnection();
+			pstmt=con.prepareStatement(getFriend,1);
+			pstmt.setLong(1,userId);
+			rset=pstmt.executeQuery();
+			while(rset.next()){
+				user=new User();
+				user.setUserId(rset.getLong(1));
+				user.setUsername(rset.getString(2));
+				user.setFirstName(rset.getString(5));
+				user.setLastName(rset.getString(6));
+				user.setDob(rset.getDate(7));
+				user.setAvatar(rset.getString(8));
+				friendlist.add(user);
+			}
+		}
+		catch (Exception e){
+			throw new DBException (e);
+		}
+		finally {
+			closeStatement(pstmt);
+			closeConnection(con);
+		}
+	
+		return friendlist;
+	}
+	
+	
 	public static void main(String[] args){
         DaoFactory fact=DaoFactory.getDaoFactory(DaoFactory.DBType.MySQL);
         UserDao userDao=fact.getUserDao();
         User user=new User();
         user.setLastName("Serob");
-        user.setPassword("2112");
+        //user.setPassword("2112");
 
         Date d=new Date(System.currentTimeMillis());
         user.setDob(d);
-        user.setUserId(23);
-        
+        user.setUserId(28);
+        ResultSet rset;
         try {
-        	
-        	//System.out.println(userDao.login("Asya","22"));
+        		//rset = new JdbcUserDao().getTvLogoAndName("2", "2mXgOaAJqEUjiAxfMGDCXQHuaGscGnvULuyeUDAoiJscuoGROP");
+        		
+            //userDao.deletFriendById(32, 34,"");
+        	//System.out.println(userDao.login("Vagarshak","2112"));
             //userDao.addUser(user);
-          //  userDao.updateUser(user,"AsyaO@jU&Y@Pyde$.EmYXR>d<uMx)Dg[(RehYPK[.rCtCT$R");
+           // userDao.updateUser(user,"mishaYZQQZEyJIozVfTVhgUGOUMbNNAofffKjODztDIoagLFQn");
         	//userDao.logout("Serojh");
-        	//userDao.sendFriendRequest(1, 3);
+        	//userDao.sendFriendRequest(1, 3);  
         	//userDao.acceptFriendRequest(3, 1);
         	//userDao.removeUser(24);
         	//System.out.println(userDao.getUserId("Asya"));
-        	System.out.println(userDao.getTokenById(23));
+        	//System.out.println(userDao.getTokenById(23));
+        	//ArrayList <User> list = userDao.getfriendRecuestList(29);
+        	//for(User us : list){
+        	//	System.out.println(us.getUsername());
+        	//}
         	
         	//userDao.declineFriendRequest(3,1,true);
-        	//ArrayList<User> list=userDao.getfriendList(2);
-        	//for(User us:list){
-        		//System.out.println(us.getUserId());
-        	//}
-        } catch (DBException e) {
+        	//User list=userDao.searchUsers("misha");
+        	//System.out.println(list.getUsername());
+        } catch (Exception e) {
             e.printStackTrace();
         }
         
@@ -665,6 +863,14 @@ public class JdbcUserDao extends JdbcDao implements UserDao{
 
 	
 	}
+
+	
+
+	
+
+	
+
+	
 
 
 	

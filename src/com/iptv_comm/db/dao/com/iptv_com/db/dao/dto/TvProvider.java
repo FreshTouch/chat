@@ -15,7 +15,7 @@ public class TvProvider {
     public int getTvProviderId() {
         return tvProviderId;
     }
-    @XmlElement
+    
     public void setTvProviderId(int tvProviderId) {
         this.tvProviderId = tvProviderId;
     }
@@ -23,7 +23,7 @@ public class TvProvider {
     public String getCompanyName() {
         return companyName;
     }
-    @XmlElement
+   
     public void setCompanyName(String companyName) {
         this.companyName = companyName;
     }
